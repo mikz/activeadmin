@@ -110,28 +110,9 @@ module ActiveAdmin
       form_buffers.last << with_new_form_buffer{ super }
     end
 
+    self.input_namespaces = [::Object, ::ActiveAdmin::Inputs, ::Formtastic::Inputs]
+
     protected
-
-    def active_admin_input_class_name(as)
-      "ActiveAdmin::Inputs::#{as.to_s.camelize}Input"
-    end
-
-    def input_class(as)
-      @input_classes_cache ||= {}
-      @input_classes_cache[as] ||= begin
-        begin
-          custom_input_class_name(as).constantize
-        rescue NameError
-          begin
-            active_admin_input_class_name(as).constantize
-          rescue NameError
-            standard_input_class_name(as).constantize
-          end
-        end
-      rescue NameError
-        raise Formtastic::UnknownInputError, "Unable to find input class for #{as}"
-      end
-    end
 
     # This method calls the block it's passed (in our case, the `f.inputs` block)
     # and wraps the resulting HTML in a fieldset. If your block doesn't have a
